@@ -1,0 +1,158 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is([data-theme="night"] *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Pixel headings, readable body: serif/heading roles resolve to the VT323
+     pixel font (used by every display heading), while sans/mono resolve to
+     Outfit so body copy and structural labels stay legible. */
+  --font-sans: var(--font-outfit);
+  --font-mono: var(--font-outfit);
+  --font-serif: var(--font-vt323);
+  --font-heading: var(--font-vt323);
+
+  /* Fluid editorial type scale -> generates text-fluid-* utilities.
+     Mirrored in lib/theme.ts (fontSize); this CSS side is what renders. */
+  --text-fluid-sm: clamp(0.8rem, 0.76rem + 0.2vw, 0.9rem);
+  --text-fluid-base: clamp(1rem, 0.94rem + 0.3vw, 1.125rem);
+  --text-fluid-lg: clamp(1.2rem, 1rem + 0.9vw, 1.6rem);
+  --text-fluid-xl: clamp(1.75rem, 1.1rem + 2.6vw, 3rem);
+  --text-fluid-2xl: clamp(2.5rem, 1.6rem + 3.2vw, 4.25rem);
+  --text-fluid-display: clamp(3.25rem, 1rem + 9vw, 9.5rem);
+
+  --color-hairline: var(--hairline);
+  --color-surface: var(--surface);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-destructive: var(--destructive);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+/*
+  Editorial light-first palette. Day is the default: a crisp white canvas with
+  ink-black text and thin hairline rules. The celestial toggle flips [data-theme]
+  to "night" for the ink-dark editorial environment. No gradients, no accents;
+  monochrome only, negative space does the framing.
+*/
+:root,
+[data-theme="day"] {
+  --background: #ffffff;
+  --foreground: #0f0f10;
+  --hairline: #e5e5e7;
+  --surface: #fafafa;
+  --muted-foreground: #6b6b70;
+
+  --card: #ffffff;
+  --card-foreground: #0f0f10;
+  --popover: #ffffff;
+  --popover-foreground: #0f0f10;
+  --primary: #0f0f10;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #0f0f10;
+  --muted: #f4f4f5;
+  --accent: #f4f4f5;
+  --accent-foreground: #0f0f10;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #e5e5e7;
+  --input: #e5e5e7;
+  --ring: #0f0f10;
+  --radius: 0.5rem;
+}
+
+[data-theme="night"] {
+  --background: #0f0f10;
+  --foreground: #f4f4f0;
+  --hairline: #262629;
+  --surface: #161618;
+  --muted-foreground: #8b8b92;
+
+  --card: #161618;
+  --card-foreground: #f4f4f0;
+  --popover: #161618;
+  --popover-foreground: #f4f4f0;
+  --primary: #f4f4f0;
+  --primary-foreground: #0f0f10;
+  --secondary: #1c1c1f;
+  --secondary-foreground: #f4f4f0;
+  --muted: #1c1c1f;
+  --accent: #1c1c1f;
+  --accent-foreground: #f4f4f0;
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: #262629;
+  --input: #2a2a2e;
+  --ring: #f4f4f0;
+}
+
+/* Non-color design tokens (fluid spacing + layout). Mirrored in lib/theme.ts. */
+:root {
+  --space-xs: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
+  --space-sm: clamp(0.75rem, 0.6rem + 0.75vw, 1.125rem);
+  --space-md: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+  --space-xl: clamp(2rem, 1.6rem + 2vw, 3rem);
+
+  --layout-max: 78rem;
+  --layout-gutter: clamp(1.25rem, 0.5rem + 3vw, 4rem);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/40;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+    scrollbar-color: var(--muted-foreground) transparent;
+  }
+  ::selection {
+    background: var(--foreground);
+    color: var(--background);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+}
+
+/*
+  Only the page canvas gets the slow cinematic color-space fade when the theme
+  flips; individual components keep fast transition-colors so hover stays crisp.
+*/
+html,
+body {
+  transition-property: background-color, color;
+  transition-duration: 700ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body {
+    transition-duration: 0.01ms;
+  }
+}
