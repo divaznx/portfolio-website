@@ -1,65 +1,78 @@
 "use client"
 
 import * as React from "react"
-import { motion, useReducedMotion, type Variants } from "motion/react"
-
 import { cn } from "@/lib/utils"
-import { anim } from "@/lib/theme"
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = React.useState(false)
+
+  React.useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches)
+    mql.addEventListener("change", handler)
+    return () => mql.removeEventListener("change", handler)
+  }, [])
+
+  return reduced
+}
 
 /*
-  Shared scroll-triggered reveal primitives. Everything animates transform +
-  opacity only and respects prefers-reduced-motion (content renders static,
-  never hidden). Spring physics come from the shared token module so every
-  editorial entrance shares one profile.
+  Shared scroll-triggered reveal primitives using IntersectionObserver and
+  CSS hardware-accelerated transitions. Respects prefers-reduced-motion.
 */
-
-const spring = anim.spring
-
 function Reveal({
   children,
   className,
   delay = 0,
-  y = 48,
+  y = 32,
 }: {
   children: React.ReactNode
   className?: string
   delay?: number
   y?: number
 }) {
-  const reduced = useReducedMotion()
+  const [intersected, setIntersected] = React.useState(false)
+  const isReduced = usePrefersReducedMotion()
+  const ref = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIntersected(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: "-60px" }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  const revealed = isReduced || intersected
 
   return (
-    <motion.div
-      className={cn(className)}
-      initial={reduced ? false : { opacity: 0, y, scale: 0.98 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ ...spring, delay }}
+    <div
+      ref={ref}
+      className={cn(
+        "transition-all duration-700 ease-out will-change-transform",
+        revealed
+          ? "opacity-100 translate-y-0 scale-100"
+          : "opacity-0 scale-[0.98]",
+        className
+      )}
+      style={{
+        transform: revealed ? undefined : `translateY(${y}px)`,
+        transitionDelay: `${delay}s`,
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
 
-const letterParent: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.035 } },
-}
-
-const letterChild: Variants = {
-  hidden: { y: "110%", opacity: 0 },
-  visible: {
-    y: "0%",
-    opacity: 1,
-    transition: anim.headingSpring,
-  },
-}
-
-/*
-  Letter-by-letter staggered heading. Each word stays in its own inline-block
-  overflow clip so lines wrap on word boundaries and letters rise out of the
-  clip; the spaces between words live outside the clips so text flows normally.
-*/
 function SplitHeading({
   text,
   className,
@@ -71,41 +84,52 @@ function SplitHeading({
   as?: "h1" | "h2" | "h3" | "p" | "span"
   delay?: number
 }) {
-  const reduced = useReducedMotion()
+  const [intersected, setIntersected] = React.useState(false)
+  const isReduced = usePrefersReducedMotion()
+  const ref = React.useRef<HTMLHeadingElement>(null)
+
+  React.useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIntersected(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: "-40px" }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  const revealed = isReduced || intersected
   const words = text.split(" ")
 
-  if (reduced) {
-    return <Tag className={className}>{text}</Tag>
-  }
-
   return (
-    <Tag className={className} aria-label={text}>
-      <motion.span
-        aria-hidden
-        className="inline"
-        variants={letterParent}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ delayChildren: delay }}
-      >
+    <Tag ref={ref} className={className} aria-label={text}>
+      <span className="inline">
         {words.map((word, w) => (
           <React.Fragment key={`${word}-${w}`}>
             <span className="inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-bottom whitespace-nowrap">
               {word.split("").map((letter, l) => (
-                <motion.span
+                <span
                   key={l}
-                  variants={letterChild}
-                  className="inline-block will-change-transform"
+                  className="inline-block transition-transform duration-500 ease-out will-change-transform"
+                  style={{
+                    transform: revealed ? "translateY(0%)" : "translateY(110%)",
+                    transitionDelay: `${delay + (w * 0.05) + (l * 0.02)}s`,
+                  }}
                 >
                   {letter}
-                </motion.span>
+                </span>
               ))}
             </span>
             {w < words.length - 1 ? " " : null}
           </React.Fragment>
         ))}
-      </motion.span>
+      </span>
     </Tag>
   )
 }

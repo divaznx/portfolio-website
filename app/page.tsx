@@ -1,21 +1,35 @@
-import { CelestialToggle } from "@/components/atmosphere/celestial-toggle"
-import { Hero } from "@/components/sections/hero"
-import { Stack } from "@/components/sections/stack"
-import { Projects } from "@/components/sections/projects"
-import { Experience } from "@/components/sections/experience"
-import { Manifesto } from "@/components/sections/manifesto"
-import { Footer } from "@/components/sections/footer"
+import { Nav } from "@/components/atmosphere/nav"
+import { ChapterProgress } from "@/components/atmosphere/chapter-progress"
+import { VideoSplash } from "@/components/atmosphere/video-splash"
+import { Introduction } from "@/components/chapters/introduction"
+import { ChapterSpark } from "@/components/chapters/ch1-spark"
+import { ChapterRoots } from "@/components/chapters/ch2-roots"
+import { ChapterLearning } from "@/components/chapters/ch3-learning"
+import { ChapterComfort } from "@/components/chapters/ch4-comfort"
+import { ChapterShipping } from "@/components/chapters/ch5-shipping"
+import { ChapterTurning } from "@/components/chapters/ch6-turning"
+import { ChapterNow } from "@/components/chapters/ch7-now"
+import { Epilogue } from "@/components/chapters/epilogue"
+import { Mascot } from "@/components/atmosphere/mascot"
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col">
-      <CelestialToggle />
-      <Hero />
-      <Stack />
-      <Projects />
-      <Experience />
-      <Manifesto />
-      <Footer />
+    <div className="flex flex-1 flex-col min-h-screen">
+      <VideoSplash />
+      <Nav />
+      <ChapterProgress />
+      <main className="flex-1">
+        <Introduction />
+        <ChapterSpark />
+        <ChapterRoots />
+        <ChapterLearning />
+        <ChapterComfort />
+        <ChapterShipping />
+        <ChapterTurning />
+        <ChapterNow />
+      </main>
+      <Epilogue />
+      <Mascot />
     </div>
   )
 }

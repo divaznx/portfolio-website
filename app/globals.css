@@ -7,16 +7,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Pixel headings, readable body: serif/heading roles resolve to the VT323
-     pixel font (used by every display heading), while sans/mono resolve to
-     Outfit so body copy and structural labels stay legible. */
+  /* Typography: Outfit for body/headlines, Space Mono for mono labels/chips */
   --font-sans: var(--font-outfit);
-  --font-mono: var(--font-outfit);
-  --font-serif: var(--font-vt323);
-  --font-heading: var(--font-vt323);
+  --font-mono: var(--font-space-mono);
+  --font-heading: var(--font-outfit);
 
-  /* Fluid editorial type scale -> generates text-fluid-* utilities.
-     Mirrored in lib/theme.ts (fontSize); this CSS side is what renders. */
+  /* Fluid editorial type scale -> generates text-fluid-* utilities */
   --text-fluid-sm: clamp(0.8rem, 0.76rem + 0.2vw, 0.9rem);
   --text-fluid-base: clamp(1rem, 0.94rem + 0.3vw, 1.125rem);
   --text-fluid-lg: clamp(1.2rem, 1rem + 0.9vw, 1.6rem);
@@ -43,6 +39,10 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-destructive: var(--destructive);
 
+  /* Accent electric color — resolves per theme */
+  --color-accent-electric: var(--accent-electric);
+  --color-on-accent: var(--on-accent);
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -51,62 +51,69 @@
 }
 
 /*
-  Editorial light-first palette. Day is the default: a crisp white canvas with
-  ink-black text and thin hairline rules. The celestial toggle flips [data-theme]
-  to "night" for the ink-dark editorial environment. No gradients, no accents;
-  monochrome only, negative space does the framing.
+  Story-driven dark-first palette. Night is the default: charcoal canvas with
+  warm off-white text and electric lime accent. The toggle flips
+  [data-theme] to "day" for the warm light environment.
 */
 :root,
-[data-theme="day"] {
-  --background: #ffffff;
-  --foreground: #0f0f10;
-  --hairline: #e5e5e7;
-  --surface: #fafafa;
-  --muted-foreground: #6b6b70;
-
-  --card: #ffffff;
-  --card-foreground: #0f0f10;
-  --popover: #ffffff;
-  --popover-foreground: #0f0f10;
-  --primary: #0f0f10;
-  --primary-foreground: #ffffff;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #0f0f10;
-  --muted: #f4f4f5;
-  --accent: #f4f4f5;
-  --accent-foreground: #0f0f10;
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: #e5e5e7;
-  --input: #e5e5e7;
-  --ring: #0f0f10;
-  --radius: 0.5rem;
-}
-
 [data-theme="night"] {
-  --background: #0f0f10;
-  --foreground: #f4f4f0;
-  --hairline: #262629;
-  --surface: #161618;
-  --muted-foreground: #8b8b92;
+  --background: #1E1E1E;
+  --foreground: #F0EDE8;
+  --hairline: #3C3B38;
+  --surface: #282826;
+  --muted-foreground: #A29E96;
 
-  --card: #161618;
-  --card-foreground: #f4f4f0;
-  --popover: #161618;
-  --popover-foreground: #f4f4f0;
-  --primary: #f4f4f0;
-  --primary-foreground: #0f0f10;
-  --secondary: #1c1c1f;
-  --secondary-foreground: #f4f4f0;
-  --muted: #1c1c1f;
-  --accent: #1c1c1f;
-  --accent-foreground: #f4f4f0;
+  --card: #282826;
+  --card-foreground: #F0EDE8;
+  --popover: #282826;
+  --popover-foreground: #F0EDE8;
+  --primary: #F0EDE8;
+  --primary-foreground: #1E1E1E;
+  --secondary: #3C3B38;
+  --secondary-foreground: #F0EDE8;
+  --muted: #3C3B38;
+  --accent: #3C3B38;
+  --accent-foreground: #F0EDE8;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: #262629;
-  --input: #2a2a2e;
-  --ring: #f4f4f0;
+  --border: #3C3B38;
+  --input: #3C3B38;
+  --ring: #F0EDE8;
+  --radius: 0.5rem;
+
+  /* Electric lime accent */
+  --accent-electric: #C6FF3D;
+  --on-accent: #14140F;
 }
 
-/* Non-color design tokens (fluid spacing + layout). Mirrored in lib/theme.ts. */
+[data-theme="day"] {
+  --background: #FAF8F5;
+  --foreground: #1A1A1A;
+  --hairline: #DAD4C8;
+  --surface: #F1EDE6;
+  --muted-foreground: #66625A;
+
+  --card: #F1EDE6;
+  --card-foreground: #1A1A1A;
+  --popover: #F1EDE6;
+  --popover-foreground: #1A1A1A;
+  --primary: #1A1A1A;
+  --primary-foreground: #FAF8F5;
+  --secondary: #DAD4C8;
+  --secondary-foreground: #1A1A1A;
+  --muted: #DAD4C8;
+  --accent: #DAD4C8;
+  --accent-foreground: #1A1A1A;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #DAD4C8;
+  --input: #DAD4C8;
+  --ring: #1A1A1A;
+
+  /* Deep green accent for light mode */
+  --accent-electric: #4F7000;
+  --on-accent: #FAF8F5;
+}
+
+/* Non-color design tokens (fluid spacing + layout). */
 :root {
   --space-xs: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
   --space-sm: clamp(0.75rem, 0.6rem + 0.75vw, 1.125rem);
@@ -130,8 +137,8 @@
     scrollbar-color: var(--muted-foreground) transparent;
   }
   ::selection {
-    background: var(--foreground);
-    color: var(--background);
+    background: var(--accent-electric);
+    color: var(--on-accent);
   }
   :focus-visible {
     outline: 2px solid var(--ring);
@@ -155,4 +162,168 @@ body {
   body {
     transition-duration: 0.01ms;
   }
+}
+
+/* ─── Subtle noise/grain background ─── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ─── Chapter / sector utilities ─── */
+.sector-tag {
+  font-family: var(--font-outfit);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent-electric);
+}
+
+.chapter-title {
+  font-family: var(--font-outfit);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+/* ─── Redacted text effect (for stealth product section) ─── */
+.redacted {
+  position: relative;
+  display: inline;
+}
+.redacted::after {
+  content: "";
+  position: absolute;
+  inset: 0 -0.15em;
+  background: var(--foreground);
+  opacity: 0.85;
+  border-radius: 2px;
+}
+
+/* ─── Status chip ─── */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid var(--accent-electric);
+  font-family: var(--font-space-mono, var(--font-outfit));
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-electric);
+  background: transparent;
+}
+.status-chip::before {
+  content: "";
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--accent-electric);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-chip::before {
+    animation: none;
+  }
+}
+
+/* ─── Boot sequence animation ─── */
+@keyframes blink-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.boot-cursor {
+  animation: blink-caret 0.8s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-cursor {
+    animation: none;
+  }
+}
+
+/* ─── Chapter progress bar (lap counter) ─── */
+.chapter-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 40;
+  background: var(--hairline);
+}
+.chapter-progress__bar {
+  height: 100%;
+  background: var(--accent-electric);
+  transform-origin: left;
+  transition: transform 0.15s ease-out;
+}
+
+/* ─── REC dot blink ─── */
+@keyframes blink-rec {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+.blink-rec {
+  animation: blink-rec 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blink-rec {
+    animation: none;
+  }
+}
+
+/* ─── Film grain overlay ─── */
+.film-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.06;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+}
+
+/* ─── Marquee animation ─── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* ─── Scroll lock for video splash ─── */
+html.scroll-locked {
+  overflow: hidden;
 }

@@ -54,16 +54,18 @@ export const anim = {
 /** Reference mirror of the per-theme colors defined in app/globals.css. */
 export const themeColors = {
   day: {
-    background: "#ffffff",
-    foreground: "#0f0f10",
-    hairline: "#e5e5e7",
-    mutedForeground: "#6b6b70",
+    background: "#FAF8F5",
+    foreground: "#1A1A1E",
+    hairline: "#E5E3DE",
+    mutedForeground: "#6B6B70",
+    accent: "#C2410C",
   },
   night: {
-    background: "#0f0f10",
-    foreground: "#f4f4f0",
-    hairline: "#262629",
-    mutedForeground: "#8b8b92",
+    background: "#1A1A1E",
+    foreground: "#F0EDE8",
+    hairline: "#2A2A2F",
+    mutedForeground: "#8B8B92",
+    accent: "#FB923C",
   },
 } as const
 

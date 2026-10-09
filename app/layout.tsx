@@ -1,33 +1,49 @@
 import type { Metadata } from "next";
-import { VT323, Outfit } from "next/font/google";
+import { Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
 
-// Two typefaces: VT323 (a pixel/terminal bitmap font, single 400 weight) drives
-// the display headings; Outfit (a clean variable-weight geometric sans) carries
-// body copy and structural labels so long text stays readable. Loaded via
-// next/font so both are self-hosted with no layout shift or blocking request.
-const vt323 = VT323({
-  variable: "--font-vt323",
-  weight: "400",
-  subsets: ["latin"],
-});
-
+// Outfit: bold tight headlines + body
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
 });
 
+// Space Mono: tags, chips, labels, mono elements
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Divaakar Naresh, AI Engineer",
+  title: "Divaakar Naresh — builder of AI systems, breaker of sleep schedules",
   description:
-    "Solo builder shipping real RAG and agentic AI systems. Not just notebooks.",
+    "Solo builder shipping real RAG and agentic AI systems. I read API docs for fun. Currently building something I can't tell you about yet.",
+  openGraph: {
+    type: "website",
+    title: "Divaakar Naresh — builder of AI systems, breaker of sleep schedules",
+    description:
+      "Solo builder shipping real RAG and agentic AI systems. Currently building something cool.",
+    url: "https://divaakar.online",
+    siteName: "Divaakar Naresh",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@Divaakar2005",
+    creator: "@Divaakar2005",
+    title: "Divaakar Naresh — builder of AI systems, breaker of sleep schedules",
+    description:
+      "Solo builder shipping real RAG and agentic AI systems. Currently building something cool.",
+  },
+  robots: { index: true, follow: true },
 };
 
-// Resolve the stored theme before first paint so the light default never flashes
-// when a visitor has previously switched to the ink-dark environment.
-const themeScript = `try{var t=localStorage.getItem('theme');if(t==='night'||t==='day'){document.documentElement.dataset.theme=t}}catch(e){}`;
+// Resolve the stored theme before first paint so the wrong theme never flashes.
+// Night (dark) is the default. Uses a NEW localStorage key dn_story_theme.
+const themeScript = `try{var k='dn_story_theme';var t=localStorage.getItem(k);if(t==='night'||t==='day'){document.documentElement.dataset.theme=t}else{var m=window.matchMedia('(prefers-color-scheme:light)');if(m.matches){document.documentElement.dataset.theme='day'}else{document.documentElement.dataset.theme='night'}}}catch(e){document.documentElement.dataset.theme='night';}`;
 
 export default function RootLayout({
   children,
@@ -37,9 +53,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="day"
+      data-theme="night"
       suppressHydrationWarning
-      className={`${vt323.variable} ${outfit.variable} h-full antialiased`}
+      className={`${outfit.variable} ${spaceMono.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
