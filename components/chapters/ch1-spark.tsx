@@ -40,7 +40,8 @@ export function ChapterSpark() {
           <Reveal delay={0.1}>
             <div className="space-y-4 text-fluid-base text-foreground/90 font-sans leading-relaxed max-w-xl">
               <p>
-                <em>The Social Network</em> is the reason I became a software developer. A movie
+                <em>The Social Network</em>{" "}
+                is the reason I became a software developer. A movie
                 about building something from nothing hit differently, and I haven&apos;t stopped
                 writing code since.
               </p>

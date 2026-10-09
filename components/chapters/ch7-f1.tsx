@@ -8,85 +8,88 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
+// 44 vertical equalizer bars precisely matching the waveform in the screenshot:
+// 4 peaks with valleys, smoothly tapering to low dots at both edges.
+const WAVEFORM_HEIGHTS = [
+  4, 5, 6, 8, 11, 15, 20, 27, 36, 44, 48, 42, 34, 28, 24, 30, 40, 50, 54, 48, 38,
+  24, 16, 12, 16, 24, 36, 46, 42, 32, 22, 16, 12, 18, 28, 38, 46, 42, 32, 20, 14, 8, 5, 4,
+] as const
+
 export function ChapterTurning() {
   const sectionRef = React.useRef<HTMLElement>(null)
-  const innerRef = React.useRef<HTMLDivElement>(null)
-  const lapCounterRef = React.useRef<HTMLSpanElement>(null)
-  const speedTraceRef = React.useRef<HTMLDivElement>(null)
+  const contentRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     const section = sectionRef.current
-    const inner = innerRef.current
-    if (!section || !inner) return
+    const content = contentRef.current
+    if (!section || !content) return
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (prefersReduced) {
-      if (lapCounterRef.current) lapCounterRef.current.textContent = "LAP 07 / 09 · FULL THROTTLE"
       return
     }
 
     const ctx = gsap.context(() => {
       const words = section.querySelectorAll(".f1-word")
-      const bars = section.querySelectorAll(".speed-bar")
+      const bars = section.querySelectorAll(".waveform-bar")
+      const header = section.querySelector(".f1-header")
+      const footer = section.querySelector(".f1-footer")
 
-      // Initial states
-      gsap.set(inner, { clipPath: "inset(100% 0% 0% 0%)" })
-      gsap.set(words, { yPercent: 110, opacity: 0 })
+      // Initial states without clipping masks so glyph descenders/ascenders are never cut off
+      gsap.set(words, { y: 24, opacity: 0 })
       gsap.set(bars, { scaleY: 0, transformOrigin: "bottom" })
+      gsap.set(header, { opacity: 0, y: -8 })
+      gsap.set(footer, { opacity: 0, y: 8 })
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=160%",
+          end: "+=130%",
           pin: true,
           pinSpacing: true,
           scrub: 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (lapCounterRef.current) {
-              const currentLap = Math.min(7, Math.max(1, Math.floor(self.progress * 7) + 1))
-              lapCounterRef.current.textContent = `LAP 0${currentLap} / 09 · FULL THROTTLE`
-            }
-          },
         },
       })
 
-      // (a) Accent band wipes in over the previous section
-      tl.to(inner, {
-        clipPath: "inset(0% 0% 0% 0%)",
-        duration: 0.4,
-        ease: "power2.out",
-      })
+      // Top header fades in
+      tl.to(header, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.05)
 
-      // (b) Words rise in one by one with a stagger
+      // Words smoothly rise and fade in with natural spacing
       tl.to(
         words,
         {
-          yPercent: 0,
+          y: 0,
           opacity: 1,
-          stagger: 0.06,
+          stagger: 0.04,
           duration: 0.5,
-          ease: "power3.out",
+          ease: "power2.out",
         },
-        "-=0.1"
+        0.1
       )
 
-      // (c) Speed-trace bars grow from scaleY 0 with stagger
+      // Audio waveform bars rise up from baseline with ripple from center
       tl.to(
         bars,
         {
           scaleY: 1,
-          stagger: 0.02,
-          duration: 0.4,
+          stagger: {
+            each: 0.012,
+            from: "center",
+          },
+          duration: 0.45,
           ease: "power2.out",
         },
-        "-=0.3"
+        0.2
       )
 
-      // (d) Short hold at the end so the finished quote stays on screen before unpinning
-      tl.to({}, { duration: 0.4 })
+      // Bottom telemetry cue fades in
+      tl.to(footer, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.3)
+
+      // Generous hold at the end so the quote stays on screen before unpinning
+      tl.to({}, { duration: 0.5 })
     }, section)
 
     return () => ctx.revert()
@@ -96,102 +99,59 @@ export function ChapterTurning() {
     <section
       id="sector-07"
       ref={sectionRef}
-      className="relative w-full bg-[var(--accent-electric)] text-[var(--on-accent)] overflow-hidden"
+      className="relative w-full min-h-[100svh] bg-[#C6FF3D] text-[#14140F] flex items-center justify-center px-6 py-12 select-none overflow-hidden"
     >
-      {/* Exactly 100svh inner container with fixed safe-area flex centering */}
       <div
-        ref={innerRef}
-        className="relative w-full h-[100svh] flex flex-col justify-between items-center px-[var(--layout-gutter)] py-8 max-w-[1100px] mx-auto select-none"
+        ref={contentRef}
+        className="w-full max-w-[1100px] flex flex-col items-center justify-center text-center my-auto z-10"
       >
-        {/* Top Reserved Telemetry Row */}
-        <div className="w-full flex items-center justify-between font-mono text-xs z-10 pt-2">
-          <div className="flex items-center gap-2 tracking-widest uppercase font-semibold">
-            <span>SECTOR 07</span>
-            <span className="opacity-40">/</span>
-            <span>THE TURNING POINT</span>
-          </div>
-
-          <div className="font-mono text-xs tracking-wider uppercase">
-            <span ref={lapCounterRef}>LAP 01 / 09 · FULL THROTTLE</span>
-          </div>
+        {/* Top Header: SECTOR 06 / THE TURNING POINT */}
+        <div className="f1-header font-mono text-xs sm:text-[13px] tracking-[0.24em] uppercase font-bold text-[#14140F] mb-10 sm:mb-14">
+          SECTOR 06 / THE TURNING POINT
         </div>
 
-        {/* Center Main Stage: Speed Trace + Fixed-Break Quote + TODO Attribution */}
-        <div className="my-auto w-full flex flex-col items-center justify-center space-y-6 sm:space-y-8 z-10">
-          {/* Speed-Trace Bars (Reserved row ABOVE the quote) */}
-          <div
-            ref={speedTraceRef}
-            className="w-full max-w-2xl flex items-end justify-center gap-1.5 h-8 px-4"
-            aria-hidden="true"
-          >
-            {Array.from({ length: 28 }).map((_, i) => {
-              const hPercent = 30 + Math.sin(i * 0.4) * 25 + (i % 3) * 15
-              return (
-                <div
-                  key={i}
-                  className="speed-bar flex-1 rounded-sm bg-current opacity-40 will-change-transform"
-                  style={{ height: `${hPercent}%` }}
-                />
-              )
-            })}
+        {/* Centered Display Quote with comfortable line height, natural word spacing, and zero glyph clipping */}
+        <blockquote className="w-full text-center font-sans font-black text-[clamp(2.5rem,2rem+5vw,6rem)] leading-[1.12] sm:leading-[1.15] tracking-[-0.02em] text-[#14140F] mb-8 sm:mb-12 space-y-1 sm:space-y-2">
+          {/* Line 1: Giving up is not in */}
+          <div className="py-1">
+            {["Giving", "up", "is", "not", "in"].map((word, i) => (
+              <React.Fragment key={word}>
+                {i > 0 && " "}
+                <span className="f1-word inline-block will-change-transform">{word}</span>
+              </React.Fragment>
+            ))}
           </div>
 
-          {/* Centered Quote with strictly fixed line breaks to prevent layout shifts */}
-          <blockquote className="w-full text-center font-sans font-bold text-[clamp(2.6rem,1.8rem+5.5vw,6.5rem)] leading-[0.98] tracking-tight">
-            {/* Desktop fixed lines */}
-            <div className="hidden sm:block">
-              <div className="overflow-hidden py-1">
-                {["Giving", "up", "is", "not"].map((word) => (
-                  <span key={word} className="inline-block overflow-hidden mr-[0.25em]">
-                    <span className="f1-word inline-block will-change-transform">{word}</span>
-                  </span>
-                ))}
-              </div>
-              <div className="overflow-hidden py-1">
-                {["in", "the", "blood,", "sir."].map((word) => (
-                  <span key={word} className="inline-block overflow-hidden mr-[0.25em]">
-                    <span className="f1-word inline-block will-change-transform">{word}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile fixed lines */}
-            <div className="sm:hidden">
-              <div className="overflow-hidden py-0.5">
-                {["Giving", "up"].map((word) => (
-                  <span key={word} className="inline-block overflow-hidden mr-[0.25em]">
-                    <span className="f1-word inline-block will-change-transform">{word}</span>
-                  </span>
-                ))}
-              </div>
-              <div className="overflow-hidden py-0.5">
-                {["is", "not", "in"].map((word) => (
-                  <span key={word} className="inline-block overflow-hidden mr-[0.25em]">
-                    <span className="f1-word inline-block will-change-transform">{word}</span>
-                  </span>
-                ))}
-              </div>
-              <div className="overflow-hidden py-0.5">
-                {["the", "blood,", "sir."].map((word) => (
-                  <span key={word} className="inline-block overflow-hidden mr-[0.25em]">
-                    <span className="f1-word inline-block will-change-transform">{word}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          </blockquote>
-
-          {/* Reserved Attribution slot (NO attribution printed) */}
-          <div className="font-mono text-xs opacity-60 tracking-wider">
-            <span>{"// NO ATTRIBUTION · [TODO: confirm quote speaker]"}</span>
+          {/* Line 2: the blood, sir */}
+          <div className="py-1">
+            {["the", "blood,", "sir"].map((word, i) => (
+              <React.Fragment key={word}>
+                {i > 0 && " "}
+                <span className="f1-word inline-block will-change-transform">{word}</span>
+              </React.Fragment>
+            ))}
           </div>
+        </blockquote>
+
+        {/* Audio Waveform Equalizer directly below quote on flat baseline */}
+        <div
+          className="flex items-end justify-center gap-[3px] sm:gap-[4.5px] md:gap-[5px] h-[58px] mb-6 sm:mb-8 px-4 max-w-full"
+          aria-hidden="true"
+        >
+          {WAVEFORM_HEIGHTS.map((height, i) => (
+            <div
+              key={i}
+              className="waveform-bar w-[3.5px] sm:w-[4.5px] md:w-[5px] bg-[#14140F] rounded-full will-change-transform origin-bottom flex-shrink-0"
+              style={{
+                height: `${height}px`,
+              }}
+            />
+          ))}
         </div>
 
-        {/* Bottom Reserved Row: Safe Footer Cue */}
-        <div className="w-full flex justify-between items-center font-mono text-xs opacity-60 border-t border-black/15 pt-3 z-10">
-          <span>CH 07 — THE TURNING POINT</span>
-          <span>NEXT: SECTOR 08 ↓</span>
+        {/* Bottom Cue: LAP 06 / 08   FULL THROTTLE */}
+        <div className="f1-footer font-mono text-xs sm:text-[13px] tracking-[0.24em] uppercase font-bold text-[#14140F]">
+          LAP 06 / 08 &nbsp; FULL THROTTLE
         </div>
       </div>
     </section>

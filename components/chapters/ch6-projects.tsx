@@ -152,9 +152,6 @@ export function ChapterProjects() {
                       <span>GitHub</span>
                       <ArrowUpRight className="size-3 text-muted-foreground" />
                     </a>
-                    <span className="font-mono text-[10px] text-muted-foreground/60 hidden sm:inline">
-                      [TODO: specific repo link]
-                    </span>
                   </div>
                 </div>
               </div>

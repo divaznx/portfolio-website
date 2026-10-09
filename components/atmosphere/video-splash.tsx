@@ -3,12 +3,12 @@
 import * as React from "react"
 import gsap from "gsap"
 
-export const SPLASH_STORAGE_KEY = "dn_splash_shown"
+export const SPLASH_STORAGE_KEY = "dn_splash_v2"
 
 /**
  * Full-screen video splash that plays hello.mp4 once per session,
  * then reveals the site with a smooth 3-stage cinematic transition:
- * 1. Video scales 1 -> 1.06, fades to 0 with blur (0.7s)
+ * 1. Video scales 1 -> 1.06, fades to 0 with blur (0.7s) over the black overlay
  * 2. 2px lime line draws across screen center (0.5s)
  * 3. Split overlay halves slide up/down (0.9s)
  * 4. Introduction entrance unfolds smoothly
@@ -21,12 +21,27 @@ export function VideoSplash() {
   const centerLineRef = React.useRef<HTMLDivElement>(null)
   const containerRef = React.useRef<HTMLDivElement>(null)
   const isTransitioningRef = React.useRef(false)
+  const hasStartedRef = React.useRef(false)
 
   const triggerTransition = React.useCallback(() => {
     if (isTransitioningRef.current) return
     isTransitioningRef.current = true
+
+    // Pause the video immediately so it cannot replay or loop
+    if (videoRef.current) {
+      try {
+        videoRef.current.pause()
+      } catch {
+        // ignore
+      }
+    }
+
     setPhase("transitioning")
-    sessionStorage.setItem(SPLASH_STORAGE_KEY, "1")
+    try {
+      sessionStorage.setItem(SPLASH_STORAGE_KEY, "1")
+    } catch {
+      // ignore
+    }
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
@@ -36,7 +51,7 @@ export function VideoSplash() {
         },
       })
 
-      // 1. Video scales and fades with blur
+      // 1. Video scales and fades with blur over the black overlay
       if (videoRef.current) {
         tl.to(
           videoRef.current,
@@ -94,22 +109,35 @@ export function VideoSplash() {
   }, [])
 
   const finishInstantly = React.useCallback(() => {
-    sessionStorage.setItem(SPLASH_STORAGE_KEY, "1")
+    if (isTransitioningRef.current) return
+    isTransitioningRef.current = true
+
+    if (videoRef.current) {
+      try {
+        videoRef.current.pause()
+      } catch {
+        // ignore
+      }
+    }
+
+    try {
+      sessionStorage.setItem(SPLASH_STORAGE_KEY, "1")
+    } catch {
+      // ignore
+    }
     document.documentElement.classList.remove("scroll-locked")
     setPhase("done")
     window.dispatchEvent(new CustomEvent("splash-skipped"))
   }, [])
 
   const handleSkip = React.useCallback(() => {
-    if (videoRef.current) {
-      videoRef.current.pause()
-    }
     finishInstantly()
   }, [finishInstantly])
 
   React.useEffect(() => {
-    const isSplashShown = sessionStorage.getItem(SPLASH_STORAGE_KEY) === "1"
-    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const isUrlForce = typeof window !== "undefined" && (window.location.search.includes("splash") || window.location.search.includes("replay"))
+    const isSplashShown = !isUrlForce && sessionStorage.getItem(SPLASH_STORAGE_KEY) === "1"
+    const isReduced = !isUrlForce && window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
     if (isSplashShown || isReduced) {
       const skipTimer = setTimeout(() => {
@@ -119,20 +147,31 @@ export function VideoSplash() {
       return () => clearTimeout(skipTimer)
     }
 
+    // Prevent double execution in React Strict Mode
+    if (hasStartedRef.current) return
+    hasStartedRef.current = true
+
     // Lock scroll
     document.documentElement.classList.add("scroll-locked")
-    const playTimer = setTimeout(() => setPhase("playing"), 0)
+    setPhase("playing")
 
     const video = videoRef.current
     if (!video) {
       finishInstantly()
-      return () => clearTimeout(playTimer)
+      return
     }
+
+    // Explicitly guarantee muted autoplay attributes on DOM element
+    video.muted = true
+    video.defaultMuted = true
+    video.playsInline = true
 
     // Trigger transition 0.35s before video finishes
     const handleTimeUpdate = () => {
-      if (video.duration && video.duration - video.currentTime <= 0.35) {
-        triggerTransition()
+      if (video.duration && video.duration > 1 && video.currentTime > 0.5) {
+        if (video.duration - video.currentTime <= 0.35) {
+          triggerTransition()
+        }
       }
     }
 
@@ -143,9 +182,12 @@ export function VideoSplash() {
     video.addEventListener("ended", handleEnded)
     video.addEventListener("error", handleError)
 
+    // Play strictly once
     const playPromise = video.play()
     if (playPromise) {
-      playPromise.catch(() => finishInstantly())
+      playPromise.catch((err) => {
+        console.warn("Autoplay was prevented by browser policy:", err)
+      })
     }
 
     return () => {
@@ -161,33 +203,33 @@ export function VideoSplash() {
     <div
       id="dn-video-splash"
       ref={containerRef}
-      className="fixed inset-0 z-[100] pointer-events-auto overflow-hidden bg-transparent"
+      className="fixed inset-0 z-[100] pointer-events-auto overflow-hidden bg-black select-none"
       aria-hidden="true"
     >
+      {/* Black overlay halves (sit behind the video at z-10) */}
       {/* Top half black curtain */}
       <div
         ref={topHalfRef}
-        className="absolute top-0 left-0 right-0 h-1/2 bg-[#1E1E1E] z-20 will-change-transform"
+        className="absolute top-0 left-0 right-0 h-1/2 bg-[#000000] z-10 will-change-transform"
       />
 
       {/* Bottom half black curtain */}
       <div
         ref={bottomHalfRef}
-        className="absolute bottom-0 left-0 right-0 h-1/2 bg-[#1E1E1E] z-20 will-change-transform"
+        className="absolute bottom-0 left-0 right-0 h-1/2 bg-[#000000] z-10 will-change-transform"
       />
 
       {/* Center 2px electric lime divider line */}
       <div
         ref={centerLineRef}
-        className="absolute top-1/2 left-0 right-0 h-[2px] -translate-y-1/2 bg-[#C6FF3D] z-30 opacity-0 origin-left will-change-transform"
+        className="absolute top-1/2 left-0 right-0 h-[2px] -translate-y-1/2 bg-[#C6FF3D] z-30 opacity-0 origin-left will-change-transform pointer-events-none"
       />
 
-      {/* Video Container (lives behind curtains and fades before split) */}
-      <div className="absolute inset-0 z-10 bg-black flex items-center justify-center overflow-hidden">
+      {/* Video Container */}
+      <div className="absolute inset-0 z-20 bg-transparent flex items-center justify-center overflow-hidden">
         <video
           ref={videoRef}
           src="/videos/hello.mp4"
-          autoPlay
           muted
           playsInline
           preload="auto"
@@ -199,8 +241,11 @@ export function VideoSplash() {
         {phase === "playing" && (
           <button
             type="button"
-            onClick={handleSkip}
-            className="absolute top-6 right-6 z-40 font-mono text-xs uppercase tracking-widest text-white/80 hover:text-white px-4 py-2 border border-white/20 rounded-full hover:border-[#C6FF3D] hover:text-[#C6FF3D] transition-colors focus-visible:outline-2 focus-visible:outline-[#C6FF3D]"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleSkip()
+            }}
+            className="absolute top-6 right-6 z-40 font-mono text-xs uppercase tracking-widest text-white/80 hover:text-white px-4 py-2 border border-white/20 rounded-full hover:border-[#C6FF3D] hover:text-[#C6FF3D] transition-colors focus-visible:outline-2 focus-visible:outline-[#C6FF3D] cursor-pointer"
             aria-label="Skip video intro"
           >
             SKIP →

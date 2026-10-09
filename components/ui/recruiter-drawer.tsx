@@ -174,6 +174,19 @@ export function RecruiterDrawer({ open, onClose }: RecruiterDrawerProps) {
             >
               LinkedIn <ExternalLink className="size-3" />
             </a>
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  sessionStorage.removeItem("dn_splash_v2")
+                  sessionStorage.removeItem("dn_splash_shown")
+                } catch {}
+                window.location.href = "/?splash=1"
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 font-mono text-xs text-muted-foreground hover:text-foreground hover:bg-surface transition-colors cursor-pointer"
+            >
+              Replay intro video ↺
+            </button>
           </div>
         </div>
       </div>

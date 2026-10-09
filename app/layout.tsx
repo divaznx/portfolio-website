@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 // Set dark mode as strict default before first paint. Follow stored preference if set. Also check splash bypass.
-const themeScript = `try{var k='dn_theme_2026';var t=localStorage.getItem(k);if(t==='night'||t==='day'){document.documentElement.dataset.theme=t}else{document.documentElement.dataset.theme='night'};if(sessionStorage.getItem('dn_splash_shown')==='1'||window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('splash-bypassed')}}catch(e){document.documentElement.dataset.theme='night';}`;
+const themeScript = `try{var k='dn_theme_2026';var t=localStorage.getItem(k);if(t==='night'||t==='day'){document.documentElement.dataset.theme=t}else{document.documentElement.dataset.theme='night'};var q=window.location.search;var f=q.indexOf('splash')!==-1||q.indexOf('replay')!==-1;if(!f&&(sessionStorage.getItem('dn_splash_v2')==='1'||window.matchMedia('(prefers-reduced-motion: reduce)').matches)){document.documentElement.classList.add('splash-bypassed')}}catch(e){document.documentElement.dataset.theme='night';}`;
 
 export default function RootLayout({
   children,
