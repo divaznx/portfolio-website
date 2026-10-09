@@ -129,7 +129,7 @@ function Nav() {
         </div>
 
         {/* Right side: socials + skip to contact + theme toggle */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-0.5 sm:gap-2">
           {/* Social icons */}
           {SOCIALS.map(({ label, href, icon: Icon }) => (
             <a
@@ -138,23 +138,23 @@ function Nav() {
               target={href.startsWith("mailto:") ? undefined : "_blank"}
               rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
               aria-label={label}
-              className="flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground hover:bg-surface"
+              className="flex size-8 sm:size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground hover:bg-surface"
             >
-              <Icon className="size-4" />
+              <Icon className="size-3.5 sm:size-4" />
             </a>
           ))}
 
           {/* Divider */}
           <span
             aria-hidden
-            className="mx-1 h-4 w-px bg-border hidden sm:block"
+            className="mx-0.5 sm:mx-1 h-4 w-px bg-border hidden xs:block"
           />
 
           {/* Resume Download */}
           <a
             href="/Divaakar_Naresh_Resume.pdf"
             download
-            className="inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground hover:text-accent-electric transition-colors px-2.5 py-1 rounded-full border border-border hover:border-accent-electric bg-surface/50"
+            className="inline-flex items-center gap-1 font-mono text-[10px] sm:text-[11px] text-muted-foreground hover:text-accent-electric transition-colors px-2 sm:px-2.5 py-1 rounded-full border border-border hover:border-accent-electric bg-surface/50 whitespace-nowrap"
             aria-label="Download Divaakar Naresh Resume PDF"
           >
             <span>Resume</span>

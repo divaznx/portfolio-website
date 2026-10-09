@@ -131,12 +131,12 @@ export function Introduction() {
         </span>
       </div>
 
-      {/* Two-column hero (mobile stacked: photo above text) */}
-      <div className="my-auto py-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
-        {/* Text column (order-2 on mobile, order-1 on desktop) */}
-        <div className="space-y-6 order-2 lg:order-1">
+      {/* Two-column hero (clean order on mobile & desktop) */}
+      <div className="my-auto py-8 sm:py-12 grid lg:grid-cols-[1.1fr_0.9fr] gap-8 sm:gap-12 lg:gap-16 items-center">
+        {/* Text column */}
+        <div className="space-y-6 order-1">
           {/* Masked Headline Words */}
-          <h1 className="chapter-title text-[clamp(3.2rem,1.8rem+6vw,5.8rem)] text-foreground leading-[1.02]">
+          <h1 className="chapter-title text-[clamp(2.8rem,1.8rem+5.5vw,5.8rem)] text-foreground leading-[1.02]">
             {headline.map((word, idx) => (
               <span key={word} className="inline-block overflow-hidden mr-[0.25em] align-top">
                 <span
@@ -156,14 +156,13 @@ export function Introduction() {
             <span className="italic text-muted-foreground">(most days).</span>
           </p>
 
-          <p ref={roleRef} className="font-mono text-xs sm:text-sm text-muted-foreground tracking-wide uppercase">
+          <p ref={roleRef} className="font-mono text-xs sm:text-sm text-accent-electric tracking-wide uppercase font-semibold">
             BACKEND DEVELOPER · AI/ML ENGINEER · PYTHON DEVELOPER
           </p>
 
           <p ref={bodyRef} className="text-fluid-base text-foreground/90 font-sans leading-relaxed max-w-xl">
-            I&apos;m a developer from Chennai who builds RAG systems, AI agents,
-            and backend APIs. I&apos;m also building my own product. This site is
-            the story of how I got here.
+            AI/ML-focused Python Developer from Chennai building RAG pipelines, LLM
+            applications, REST APIs, and computer vision systems. Currently building my own product.
           </p>
 
           <div ref={chipsRef} className="flex flex-wrap items-center gap-2 font-mono text-[11px]">
@@ -171,7 +170,7 @@ export function Introduction() {
               Chennai, India
             </span>
             <span className="rounded-full border border-border px-3 py-1 text-muted-foreground">
-              RAG · Agents · Backend
+              FastAPI · LangGraph · Qdrant
             </span>
             <span className="rounded-full border border-border px-3 py-1 text-muted-foreground">
               BCA · 8.02 CGPA
@@ -179,32 +178,32 @@ export function Introduction() {
           </div>
 
           {/* Primary & Secondary CTAs at end of column */}
-          <div ref={ctasRef} className="pt-4 space-y-2">
-            <div className="flex flex-wrap items-center gap-4">
+          <div ref={ctasRef} className="pt-2 sm:pt-4 space-y-2">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <a
                 href="/Divaakar_Naresh_Resume.pdf"
                 download
-                className="inline-flex items-center gap-2 rounded-full bg-accent-electric px-6 py-3 font-mono text-xs font-bold text-on-accent uppercase tracking-wider hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-2 rounded-full bg-accent-electric px-6 py-3 font-mono text-xs font-bold text-on-accent uppercase tracking-wider hover:opacity-90 transition-opacity min-h-[44px]"
               >
                 Download resume ↓
               </a>
               <button
                 type="button"
                 onClick={scrollToStory}
-                className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 font-mono text-xs font-bold text-foreground uppercase tracking-wider hover:border-accent-electric hover:text-accent-electric transition-colors"
+                className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 font-mono text-xs font-bold text-foreground uppercase tracking-wider hover:border-accent-electric hover:text-accent-electric transition-colors min-h-[44px]"
               >
                 Start the story →
               </button>
             </div>
             <span className="block font-mono text-[10px] text-muted-foreground pl-1">
-              PDF
+              PDF · Updated Oct 2026
             </span>
           </div>
         </div>
 
-        {/* Right: Clean Portrait Box (order-1 on mobile, order-2 on desktop) */}
-        <div className="order-1 lg:order-2 flex justify-center">
-          <div ref={portraitRef} className="w-full max-w-[440px] flex justify-center">
+        {/* Right: Clean Portrait Box */}
+        <div className="order-2 flex justify-center">
+          <div ref={portraitRef} className="w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[440px] flex justify-center">
             {/* Clean Box: ONLY the image, natural aspect ratio, no captions or labels */}
             <div className="rounded-[16px] border border-border overflow-hidden bg-surface shadow-md inline-block max-w-full">
               <Image
@@ -213,8 +212,8 @@ export function Introduction() {
                 width={1079}
                 height={1340}
                 priority
-                className="w-full h-auto max-h-[80vh] object-contain block rounded-[16px]"
-                sizes="(max-width: 768px) 90vw, 440px"
+                className="w-full h-auto max-h-[52vh] sm:max-h-[70vh] lg:max-h-[80vh] object-contain block rounded-[16px]"
+                sizes="(max-width: 768px) 85vw, 440px"
               />
             </div>
           </div>

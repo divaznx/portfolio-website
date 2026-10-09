@@ -226,15 +226,21 @@ export function VideoSplash() {
       />
 
       {/* Video Container */}
-      <div className="absolute inset-0 z-20 bg-transparent flex items-center justify-center overflow-hidden">
+      <div
+        className="absolute inset-0 z-20 bg-transparent flex items-center justify-center overflow-hidden cursor-pointer"
+        onClick={() => {
+          if (phase === "playing") handleSkip()
+        }}
+      >
         <video
           ref={videoRef}
           src="/videos/hello.mp4"
+          autoPlay
           muted
           playsInline
           preload="auto"
           aria-hidden="true"
-          className="w-full h-full object-cover will-change-transform"
+          className="w-full h-full max-h-screen object-contain will-change-[transform,opacity] select-none"
         />
 
         {/* SKIP button */}
@@ -245,7 +251,7 @@ export function VideoSplash() {
               e.stopPropagation()
               handleSkip()
             }}
-            className="absolute top-6 right-6 z-40 font-mono text-xs uppercase tracking-widest text-white/80 hover:text-white px-4 py-2 border border-white/20 rounded-full hover:border-[#C6FF3D] hover:text-[#C6FF3D] transition-colors focus-visible:outline-2 focus-visible:outline-[#C6FF3D] cursor-pointer"
+            className="absolute top-[max(1.25rem,env(safe-area-inset-top))] right-[max(1.25rem,env(safe-area-inset-right))] z-40 font-mono text-xs uppercase tracking-widest text-white/90 hover:text-white px-5 py-2.5 min-h-[44px] border border-white/20 rounded-full hover:border-[#C6FF3D] hover:text-[#C6FF3D] transition-colors focus-visible:outline-2 focus-visible:outline-[#C6FF3D] cursor-pointer bg-black/50 backdrop-blur-sm"
             aria-label="Skip video intro"
           >
             SKIP →

@@ -35,61 +35,114 @@ export function ChapterTurning() {
       const header = section.querySelector(".f1-header")
       const footer = section.querySelector(".f1-footer")
 
-      // Initial states without clipping masks so glyph descenders/ascenders are never cut off
-      gsap.set(words, { y: 24, opacity: 0 })
-      gsap.set(bars, { scaleY: 0, transformOrigin: "bottom" })
-      gsap.set(header, { opacity: 0, y: -8 })
-      gsap.set(footer, { opacity: 0, y: 8 })
+      const mm = gsap.matchMedia()
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "+=130%",
-          pin: true,
-          pinSpacing: true,
-          scrub: 0.8,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
+      // Mobile / Tablet: Smooth trigger entrance without scroll-jacking pin
+      mm.add("(max-width: 768px)", () => {
+        gsap.set(words, { y: 16, opacity: 0 })
+        gsap.set(bars, { scaleY: 0.15, transformOrigin: "bottom" })
+        gsap.set(header, { opacity: 0, y: -6 })
+        gsap.set(footer, { opacity: 0, y: 6 })
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 75%",
+            toggleActions: "play none none reverse",
+          },
+        })
+
+        tl.to(header, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 0)
+          .to(
+            words,
+            {
+              y: 0,
+              opacity: 1,
+              stagger: 0.05,
+              duration: 0.45,
+              ease: "back.out(1.4)",
+            },
+            0.1
+          )
+          .to(
+            bars,
+            {
+              scaleY: 1,
+              stagger: {
+                each: 0.01,
+                from: "center",
+              },
+              duration: 0.4,
+              ease: "power2.out",
+            },
+            0.2
+          )
+          .to(footer, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.35)
+
+        // Subtle ambient telemetry flutter on mobile after reveal
+        tl.add(() => {
+          gsap.to(bars, {
+            scaleY: "random(0.5, 1.1)",
+            duration: 0.35,
+            stagger: {
+              each: 0.02,
+              from: "random",
+              repeat: -1,
+              yoyo: true,
+            },
+            ease: "sine.inOut",
+          })
+        }, 0.6)
       })
 
-      // Top header fades in
-      tl.to(header, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.05)
+      // Desktop: Pinned cinematic scrub experience
+      mm.add("(min-width: 769px)", () => {
+        gsap.set(words, { y: 24, opacity: 0 })
+        gsap.set(bars, { scaleY: 0, transformOrigin: "bottom" })
+        gsap.set(header, { opacity: 0, y: -8 })
+        gsap.set(footer, { opacity: 0, y: 8 })
 
-      // Words smoothly rise and fade in with natural spacing
-      tl.to(
-        words,
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.04,
-          duration: 0.5,
-          ease: "power2.out",
-        },
-        0.1
-      )
-
-      // Audio waveform bars rise up from baseline with ripple from center
-      tl.to(
-        bars,
-        {
-          scaleY: 1,
-          stagger: {
-            each: 0.012,
-            from: "center",
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "+=120%",
+            pin: true,
+            pinSpacing: true,
+            scrub: 0.6,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
           },
-          duration: 0.45,
-          ease: "power2.out",
-        },
-        0.2
-      )
+        })
 
-      // Bottom telemetry cue fades in
-      tl.to(footer, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.3)
-
-      // Generous hold at the end so the quote stays on screen before unpinning
-      tl.to({}, { duration: 0.5 })
+        tl.to(header, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.05)
+          .to(
+            words,
+            {
+              y: 0,
+              opacity: 1,
+              stagger: 0.04,
+              duration: 0.5,
+              ease: "power2.out",
+            },
+            0.1
+          )
+          .to(
+            bars,
+            {
+              scaleY: 1,
+              stagger: {
+                each: 0.012,
+                from: "center",
+              },
+              duration: 0.45,
+              ease: "power2.out",
+            },
+            0.2
+          )
+          .to(footer, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.3)
+          .to({}, { duration: 0.5 })
+      })
     }, section)
 
     return () => ctx.revert()
@@ -99,21 +152,21 @@ export function ChapterTurning() {
     <section
       id="sector-07"
       ref={sectionRef}
-      className="relative w-full min-h-[100svh] bg-[#C6FF3D] text-[#14140F] flex items-center justify-center px-6 py-12 select-none overflow-hidden"
+      className="relative w-full min-h-[100svh] bg-[#C6FF3D] text-[#14140F] flex items-center justify-center px-4 sm:px-6 py-12 select-none overflow-hidden"
     >
       <div
         ref={contentRef}
         className="w-full max-w-[1100px] flex flex-col items-center justify-center text-center my-auto z-10"
       >
-        {/* Top Header: SECTOR 06 / THE TURNING POINT */}
-        <div className="f1-header font-mono text-xs sm:text-[13px] tracking-[0.24em] uppercase font-bold text-[#14140F] mb-10 sm:mb-14">
-          SECTOR 06 / THE TURNING POINT
+        {/* Top Header: SECTOR 07 / THE TURNING POINT */}
+        <div className="f1-header font-mono text-[11px] sm:text-[13px] tracking-[0.24em] uppercase font-bold text-[#14140F] mb-8 sm:mb-14">
+          SECTOR 07 / THE TURNING POINT
         </div>
 
-        {/* Centered Display Quote with comfortable line height, natural word spacing, and zero glyph clipping */}
-        <blockquote className="w-full text-center font-sans font-black text-[clamp(2.5rem,2rem+5vw,6rem)] leading-[1.12] sm:leading-[1.15] tracking-[-0.02em] text-[#14140F] mb-8 sm:mb-12 space-y-1 sm:space-y-2">
+        {/* Centered Display Quote with calibrated mobile size so line 1 & line 2 never break awkwardly */}
+        <blockquote className="w-full text-center font-sans font-black text-[clamp(1.75rem,1.1rem+4vw,5.5rem)] leading-[1.12] sm:leading-[1.15] tracking-[-0.02em] text-[#14140F] mb-8 sm:mb-12 space-y-1 sm:space-y-2">
           {/* Line 1: Giving up is not in */}
-          <div className="py-1">
+          <div className="py-0.5 sm:py-1">
             {["Giving", "up", "is", "not", "in"].map((word, i) => (
               <React.Fragment key={word}>
                 {i > 0 && " "}
@@ -123,7 +176,7 @@ export function ChapterTurning() {
           </div>
 
           {/* Line 2: the blood, sir */}
-          <div className="py-1">
+          <div className="py-0.5 sm:py-1 whitespace-nowrap">
             {["the", "blood,", "sir"].map((word, i) => (
               <React.Fragment key={word}>
                 {i > 0 && " "}
@@ -135,13 +188,13 @@ export function ChapterTurning() {
 
         {/* Audio Waveform Equalizer directly below quote on flat baseline */}
         <div
-          className="flex items-end justify-center gap-[3px] sm:gap-[4.5px] md:gap-[5px] h-[58px] mb-6 sm:mb-8 px-4 max-w-full"
+          className="flex items-end justify-center gap-[2.5px] sm:gap-[4px] md:gap-[5px] h-[52px] sm:h-[58px] mb-6 sm:mb-8 px-2 max-w-full"
           aria-hidden="true"
         >
           {WAVEFORM_HEIGHTS.map((height, i) => (
             <div
               key={i}
-              className="waveform-bar w-[3.5px] sm:w-[4.5px] md:w-[5px] bg-[#14140F] rounded-full will-change-transform origin-bottom flex-shrink-0"
+              className="waveform-bar w-[2.75px] sm:w-[4px] md:w-[5px] bg-[#14140F] rounded-full will-change-transform origin-bottom flex-shrink-0"
               style={{
                 height: `${height}px`,
               }}
@@ -149,9 +202,9 @@ export function ChapterTurning() {
           ))}
         </div>
 
-        {/* Bottom Cue: LAP 06 / 08   FULL THROTTLE */}
-        <div className="f1-footer font-mono text-xs sm:text-[13px] tracking-[0.24em] uppercase font-bold text-[#14140F]">
-          LAP 06 / 08 &nbsp; FULL THROTTLE
+        {/* Bottom Cue: LAP 07 / 09   FULL THROTTLE */}
+        <div className="f1-footer font-mono text-[11px] sm:text-[13px] tracking-[0.24em] uppercase font-bold text-[#14140F]">
+          LAP 07 / 09 &nbsp; FULL THROTTLE
         </div>
       </div>
     </section>

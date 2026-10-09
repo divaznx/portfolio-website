@@ -54,11 +54,11 @@ export function RecruiterDrawer({ open, onClose }: RecruiterDrawerProps) {
             <h3 className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-1">
               Role &amp; Focus
             </h3>
-            <p className="font-semibold text-foreground">
-              Python Developer · Agentic AI &amp; RAG Systems · Backend Engineer
+            <p className="font-semibold text-foreground text-sm">
+              Backend Developer · AI/ML Engineer · Python Developer
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Specialized in production LLM inference, multi-agent workflows, vector search, and clean REST APIs.
+            <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+              AI/ML-focused Python Developer with hands-on experience building RAG pipelines, LLM applications, REST APIs, and backend systems. Experienced in FastAPI, LangChain, LangGraph, vector search, prompt engineering, document processing, and AI automation.
             </p>
           </div>
 
@@ -66,8 +66,8 @@ export function RecruiterDrawer({ open, onClose }: RecruiterDrawerProps) {
           <div className="grid grid-cols-2 gap-3 font-mono text-xs">
             <div className="rounded-md border border-border p-3">
               <span className="text-muted-foreground block text-[10px] uppercase">Availability</span>
-              <span className="text-foreground font-semibold mt-0.5 block">Freelance &amp; Select Contracts</span>
-              <span className="text-muted-foreground text-[10px]">Since Jan 2026</span>
+              <span className="text-foreground font-semibold mt-0.5 block">Full-time &amp; Contracts</span>
+              <span className="text-muted-foreground text-[10px]">Open Immediately</span>
             </div>
             <div className="rounded-md border border-border p-3">
               <span className="text-muted-foreground block text-[10px] uppercase">Location</span>
@@ -77,59 +77,80 @@ export function RecruiterDrawer({ open, onClose }: RecruiterDrawerProps) {
           </div>
 
           {/* Core Technical Capabilities */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             <h3 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-              Core Tech Stack
+              Technical Skills
             </h3>
-            <div className="flex flex-wrap gap-1.5 font-mono text-xs">
-              {[
-                "Python 3.12+",
-                "FastAPI",
-                "LangGraph",
-                "LangChain",
-                "Model Context Protocol (MCP)",
-                "Qdrant",
-                "RAG Systems",
-                "Docker",
-                "Linux",
-                "AWS EC2",
-                "Supabase",
-                "PostgreSQL",
-              ].map((s) => (
-                <span key={s} className="rounded border border-border bg-surface px-2 py-0.5 text-foreground">
-                  {s}
-                </span>
-              ))}
+            <div className="space-y-2 text-xs">
+              <div>
+                <span className="font-mono text-[10px] text-muted-foreground uppercase block mb-1">Backend &amp; Languages</span>
+                <div className="flex flex-wrap gap-1 font-mono text-[11px]">
+                  {["Python", "FastAPI", "Go", "PHP", "SQL", "Flask", "REST APIs", "Uvicorn"].map((s) => (
+                    <span key={s} className="rounded border border-border bg-surface px-2 py-0.5 text-foreground">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <span className="font-mono text-[10px] text-muted-foreground uppercase block mb-1">AI / ML &amp; Tools</span>
+                <div className="flex flex-wrap gap-1 font-mono text-[11px]">
+                  {["LangChain", "LangGraph", "RAG", "LLMs", "Qdrant", "Chroma", "Ollama", "Qwen", "MCP", "Open WebUI"].map((s) => (
+                    <span key={s} className="rounded border border-border bg-surface px-2 py-0.5 text-accent-electric">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <span className="font-mono text-[10px] text-muted-foreground uppercase block mb-1">Computer Vision &amp; Infra</span>
+                <div className="flex flex-wrap gap-1 font-mono text-[11px]">
+                  {["YOLO", "ByteTrack", "OpenCV", "Docker", "AWS EC2/S3", "Linux", "PostgreSQL", "Supabase", "Git"].map((s) => (
+                    <span key={s} className="rounded border border-border bg-surface px-2 py-0.5 text-foreground/90">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Experience Highlights */}
           <div className="space-y-3">
             <h3 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-              Track Record Summary
+              Experience &amp; Track Record
             </h3>
             <div className="space-y-3 text-xs text-foreground/90 font-sans">
               <div className="border-l-2 border-accent-electric pl-3">
-                <div className="font-semibold text-foreground">AI Platform Engineer · CareShield</div>
-                <div className="text-muted-foreground text-[11px] font-mono">Mavens i Softech · Jun 2026 – Aug 2026</div>
-                <p className="mt-0.5">Built FastAPI backend with real-time Qwen LLM inference, dynamic persona-based interviews, and structured health output generation.</p>
+                <div className="font-semibold text-foreground">Freelance AI &amp; Software Developer</div>
+                <div className="text-muted-foreground text-[11px] font-mono">Freelancer · Chennai · Sep 2026 – Oct 2026</div>
+                <p className="mt-0.5">Built RAG-powered chatbots for business knowledge bases, developed AI automation workflows integrating LLMs/APIs, and deployed a responsive business website.</p>
+              </div>
+
+              <div className="border-l-2 border-accent-electric pl-3">
+                <div className="font-semibold text-foreground">AI Engineer Intern · CareShield</div>
+                <div className="text-muted-foreground text-[11px] font-mono">Mavens i Softech Solutions · Jun 2026 – Aug 2026</div>
+                <p className="mt-0.5">Built FastAPI backend with real-time Qwen LLM inference, dynamic persona-based interviews, automated summarization pipeline, and modular REST architecture.</p>
               </div>
 
               <div className="border-l-2 border-border pl-3">
-                <div className="font-semibold text-foreground">AI &amp; RAG Engineer · Sri Ramakrishna Math</div>
-                <div className="text-muted-foreground text-[11px] font-mono">Dec 2025 – Jan 2026</div>
-                <p className="mt-0.5">Extended Open WebUI with internal knowledge base using embeddings and vector similarity search across large document archives.</p>
+                <div className="font-semibold text-foreground">Gen AI Intern · Knowledge Base RAG</div>
+                <div className="text-muted-foreground text-[11px] font-mono">Sri Ramakrishna Math · Dec 2025 – Jan 2026</div>
+                <p className="mt-0.5">Enhanced Open WebUI with organization-specific knowledge base capabilities, implementing RAG pipelines using embeddings and vector similarity search.</p>
               </div>
 
               <div className="border-l-2 border-border pl-3">
-                <div className="font-semibold text-foreground">Business Strategist · Gomatha Milk (Part-time)</div>
-                <div className="text-muted-foreground text-[11px] font-mono">Chennai · Apr 2021 – Present</div>
-                <p className="mt-0.5">Managed unit economics, pricing algorithms based on cost inputs, supply/demand planning, and direct household distribution.</p>
+                <div className="font-semibold text-foreground">IT Intern · Internal Workflows</div>
+                <div className="text-muted-foreground text-[11px] font-mono">eNTrust Software &amp; Services · Jun 2024</div>
+                <p className="mt-0.5">Explored Flask-based applications to optimize production workflows; hands-on exposure to Python, NLP, OCR, and deployment practices.</p>
               </div>
 
               <div className="border-l-2 border-border pl-3">
-                <div className="font-semibold text-foreground">BCA (Bachelor of Computer Applications)</div>
-                <div className="text-muted-foreground text-[11px] font-mono">Ramakrishna Mission Vivekananda College · 8.02 CGPA</div>
+                <div className="font-semibold text-foreground">Education</div>
+                <div className="text-muted-foreground text-[11px] font-mono">Ramakrishna Mission Vivekananda College (BCA — 8.02 CGPA, 2023 – 2026)</div>
+                <div className="text-muted-foreground text-[11px] font-mono">Santhome Higher Secondary School (12th Standard — 75%, 2022 – 2023)</div>
               </div>
             </div>
           </div>

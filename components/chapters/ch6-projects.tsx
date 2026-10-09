@@ -17,30 +17,30 @@ const CASE_FILES = [
   {
     id: "CASE-FILE-01",
     title: "Legal Document RAG System",
-    problem: "Legal documents are long, structured, and unforgiving. Answers need receipts.",
-    painful: "Chunking by token count shreds articles and clauses mid-thought.",
-    solution: "Structure-aware chunking by article, section, and clause, stored with metadata so every answer comes with a citation.",
-    stack: ["FastAPI", "Qdrant", "RAG"],
+    problem: "Legal documents are dense, nested, and unforgiving. Answers need verifiable citations.",
+    painful: "Arbitrary token chunking shreds legal articles and clauses mid-thought.",
+    solution: "Structure-aware chunking by articles, sections, and clauses. Document chunks stored with deep metadata in Qdrant to generate accurate, citation-backed responses.",
+    stack: ["FastAPI", "Qdrant", "RAG", "Python"],
     githubUrl: "https://github.com/divaznx",
     fullWidth: false,
   },
   {
     id: "CASE-FILE-02",
     title: "Multi-Agent Travel Booking Agent",
-    problem: "Trip planning means juggling flights, hotels, and a budget that fights back.",
-    painful: "Getting several agents to cooperate instead of arguing.",
-    solution: "A LangGraph multi-agent planner using MCP tools for flight and hotel search, building plans around budget and preferences.",
-    stack: ["LangGraph", "MCP", "Multi-agent"],
+    problem: "Trip planning means juggling flights, hotels, and a dynamic budget that fights back.",
+    painful: "Orchestrating autonomous agents without infinite recursion or budget drift.",
+    solution: "LangGraph orchestration with MCP tool servers for live search. Planning and budgeting agents negotiate to synthesize bookable itineraries.",
+    stack: ["LangGraph", "MCP", "Multi-Agent", "Python"],
     githubUrl: "https://github.com/divaznx",
     fullWidth: false,
   },
   {
     id: "CASE-FILE-03",
     title: "AI-Powered Video Threat Detection System",
-    problem: "Surveillance footage runs for hours and nobody watches all of it.",
-    painful: "Tracking the same person persistently across frames.",
-    solution: "A YOLO + ByteTrack pipeline that detects and tracks people and raises timestamped alerts with confidence scores and tracking IDs for restricted-area entry and prolonged presence, behind a FastAPI backend for video upload, async analysis, results, and annotated footage.",
-    stack: ["YOLO", "ByteTrack", "OpenCV", "FastAPI"],
+    problem: "Surveillance footage runs 24/7 across physical security zones where human attention lapses.",
+    painful: "Maintaining persistent tracking IDs across occlusions and dynamic camera angles.",
+    solution: "Frame-processing pipeline using YOLO for object detection and ByteTrack for persistent multi-object tracking. Detects restricted-area entry and prolonged presence with timestamped alerts, paired with an asynchronous FastAPI backend for video processing and annotated footage generation.",
+    stack: ["Python", "OpenCV", "YOLO", "ByteTrack", "FastAPI"],
     githubUrl: "https://github.com/divaznx",
     fullWidth: true,
   },
@@ -89,20 +89,20 @@ export function ChapterProjects() {
               delay={0.15 + idx * 0.1}
               className={caseFile.fullWidth ? "md:col-span-2" : "md:col-span-1"}
             >
-              <div className="relative rounded-2xl border border-border bg-card p-6 sm:p-8 flex flex-col justify-between h-full shadow-lg hover:border-accent-electric transition-colors group">
+              <div className="relative rounded-2xl border border-border bg-card p-5 sm:p-8 flex flex-col justify-between h-full shadow-lg hover:border-accent-electric transition-colors group">
                 {/* Stamp: PERSONAL PROJECT */}
-                <div className="absolute top-6 right-6 font-mono text-[10px] tracking-widest uppercase border border-accent-electric/80 text-accent-electric bg-accent-electric/10 rounded-md px-2.5 py-1 rotate-[-4deg] select-none shadow-xs">
-                  PERSONAL PROJECT
+                <div className="absolute top-5 right-5 sm:top-6 sm:right-6 font-mono text-[9px] sm:text-[10px] tracking-widest uppercase border border-accent-electric/80 text-accent-electric bg-accent-electric/10 rounded-md px-2 py-0.5 sm:px-2.5 sm:py-1 rotate-[-4deg] select-none shadow-xs">
+                  PROJECT
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-5 sm:space-y-6">
                   {/* Dossier Header */}
                   <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
                     <Folder className="size-4 text-accent-electric" />
                     <span>{caseFile.id}</span>
                   </div>
 
-                  <h3 className="font-sans font-bold text-xl sm:text-2xl text-foreground">
+                  <h3 className="font-sans font-bold text-xl sm:text-2xl text-foreground pr-16 sm:pr-0">
                     {caseFile.title}
                   </h3>
 
