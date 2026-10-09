@@ -2,45 +2,98 @@
 
 import * as React from "react"
 
-type Theme = "night" | "day"
-const THEME_STORAGE_KEY = "dn_story_theme"
+export type Theme = "night" | "day"
+export const THEME_STORAGE_KEY = "dn_theme_2026"
 
-const ThemeContext = React.createContext<{
+interface ThemeContextType {
   theme: Theme
-  toggle: () => void
-}>({ theme: "night", toggle: () => {} })
-
-function getSnapshotTheme(): Theme {
-  if (typeof document !== "undefined") {
-    const domTheme = document.documentElement.dataset.theme as Theme
-    if (domTheme === "day" || domTheme === "night") return domTheme
-  }
-  return "night"
+  toggle: (event?: React.MouseEvent) => void
+  mounted: boolean
 }
 
-function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = React.useState<Theme>(getSnapshotTheme)
+const emptySubscribe = () => () => {}
 
-  const toggle = React.useCallback(() => {
+const ThemeContext = React.createContext<ThemeContextType>({
+  theme: "night",
+  toggle: () => {},
+  mounted: false,
+})
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = React.useState<Theme>("night")
+  
+  // Clean hydration detection without cascading setState renders
+  const mounted = React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  )
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      const domTheme = document.documentElement.dataset.theme as Theme
+      if (domTheme === "day" || domTheme === "night") {
+        setTheme(domTheme)
+      }
+    }, 0)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const toggle = React.useCallback((event?: React.MouseEvent) => {
     setTheme((prev) => {
-      const next = prev === "day" ? "night" : "day"
-      document.documentElement.dataset.theme = next
-      try {
-        window.localStorage.setItem(THEME_STORAGE_KEY, next)
-      } catch {}
+      const next: Theme = prev === "day" ? "night" : "day"
+
+      const applyTheme = () => {
+        document.documentElement.dataset.theme = next
+        try {
+          window.localStorage.setItem(THEME_STORAGE_KEY, next)
+        } catch {}
+      }
+
+      // Circular-reveal transition if startViewTransition supported and event provided
+      if (typeof document !== "undefined" && "startViewTransition" in document && event) {
+        const x = event.clientX
+        const y = event.clientY
+        const endRadius = Math.hypot(
+          Math.max(x, window.innerWidth - x),
+          Math.max(y, window.innerHeight - y)
+        )
+
+        // View transition API
+        const transition = (document as unknown as { startViewTransition: (cb: () => void) => { ready: Promise<void> } }).startViewTransition(() => {
+          applyTheme()
+        })
+
+        transition.ready?.then(() => {
+          document.documentElement.animate(
+            {
+              clipPath: [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`,
+              ],
+            },
+            {
+              duration: 600,
+              easing: "ease-in-out",
+              pseudoElement: "::view-transition-new(root)",
+            }
+          )
+        })
+      } else {
+        applyTheme()
+      }
+
       return next
     })
   }, [])
 
   return (
-    <ThemeContext.Provider value={{ theme, toggle }}>
+    <ThemeContext.Provider value={{ theme, toggle, mounted }}>
       {children}
     </ThemeContext.Provider>
   )
 }
 
-function useTheme() {
+export function useTheme() {
   return React.useContext(ThemeContext)
 }
-
-export { ThemeProvider, useTheme }

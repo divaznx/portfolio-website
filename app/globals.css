@@ -164,6 +164,10 @@ body {
   }
 }
 
+html.splash-bypassed #dn-video-splash {
+  display: none !important;
+}
+
 /* ─── Subtle noise/grain background ─── */
 body::before {
   content: "";

@@ -41,9 +41,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-// Resolve the stored theme before first paint so the wrong theme never flashes.
-// Night (dark) is the default. Uses a NEW localStorage key dn_story_theme.
-const themeScript = `try{var k='dn_story_theme';var t=localStorage.getItem(k);if(t==='night'||t==='day'){document.documentElement.dataset.theme=t}else{var m=window.matchMedia('(prefers-color-scheme:light)');if(m.matches){document.documentElement.dataset.theme='day'}else{document.documentElement.dataset.theme='night'}}}catch(e){document.documentElement.dataset.theme='night';}`;
+// Set dark mode as strict default before first paint. Follow stored preference if set. Also check splash bypass.
+const themeScript = `try{var k='dn_theme_2026';var t=localStorage.getItem(k);if(t==='night'||t==='day'){document.documentElement.dataset.theme=t}else{document.documentElement.dataset.theme='night'};if(sessionStorage.getItem('dn_splash_shown')==='1'||window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('splash-bypassed')}}catch(e){document.documentElement.dataset.theme='night';}`;
 
 export default function RootLayout({
   children,

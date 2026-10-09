@@ -5,60 +5,10 @@ import Image from "next/image"
 import { Reveal } from "@/components/motion/reveal"
 import { ExternalLink } from "lucide-react"
 
-const PHRASES = ["...is this thing on?", "okay, hello everyone."]
-
 export function ChapterComfort() {
-  const [typedText, setTypedText] = React.useState("")
-  const sectionRef = React.useRef<HTMLElement>(null)
-  const [inView, setInView] = React.useState(false)
-
-  React.useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return
-      const rect = sectionRef.current.getBoundingClientRect()
-      setInView(rect.top < window.innerHeight * 0.7)
-    }
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  React.useEffect(() => {
-    if (!inView) return
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const timer = setTimeout(() => setTypedText(PHRASES[1]), 0)
-      return () => clearTimeout(timer)
-    }
-
-    let currentPhrase = 0
-    let charIndex = 0
-    let timeout: ReturnType<typeof setTimeout>
-
-    const type = () => {
-      const phrase = PHRASES[currentPhrase]
-      if (charIndex <= phrase.length) {
-        setTypedText(phrase.slice(0, charIndex))
-        charIndex++
-        timeout = setTimeout(type, 60)
-      } else if (currentPhrase === 0) {
-        // Pause then move to second phrase
-        timeout = setTimeout(() => {
-          currentPhrase = 1
-          charIndex = 0
-          setTypedText("")
-          timeout = setTimeout(type, 300)
-        }, 1500)
-      }
-    }
-
-    timeout = setTimeout(type, 800)
-    return () => clearTimeout(timeout)
-  }, [inView])
-
   return (
     <section
       id="sector-04"
-      ref={sectionRef}
       className="relative min-h-[95vh] flex flex-col justify-between py-24 px-[var(--layout-gutter)] max-w-[var(--layout-max)] mx-auto border-t border-border"
     >
       {/* Sector Tag */}
@@ -72,8 +22,9 @@ export function ChapterComfort() {
         </div>
       </div>
 
-      {/* Main Narrative & Stage */}
-      <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center my-auto">
+      {/* Main Narrative & Two-Image Desk Gallery */}
+      <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center my-auto">
+        {/* Narrative text */}
         <div className="space-y-6">
           <Reveal>
             <h2 className="chapter-title text-[clamp(2.8rem,1.5rem+5vw,5.5rem)] text-foreground">
@@ -95,64 +46,64 @@ export function ChapterComfort() {
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="pt-2 flex flex-wrap items-center gap-4">
+            <div className="pt-1 flex flex-wrap items-center gap-4">
               <a
                 href="https://www.linkedin.com/company/ullas-trust/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 font-mono text-xs text-accent-electric hover:border-accent-electric transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 font-mono text-xs text-foreground hover:border-accent-electric hover:text-accent-electric transition-colors"
               >
                 <span>Ullas Trust</span>
-                <ExternalLink className="size-3" />
+                <ExternalLink className="size-3 text-muted-foreground" />
               </a>
             </div>
           </Reveal>
 
           <Reveal delay={0.2}>
             <div className="pt-2 font-mono text-xs text-accent-electric flex items-center gap-2">
-              <span>→</span>
+              <span className="inline-block size-1.5 rounded-full bg-accent-electric" />
               <span>Comfort zone: left. Production deploys: ahead.</span>
             </div>
           </Reveal>
         </div>
 
-        {/* Visual: Stage frame with ullas.jpeg */}
+        {/* Two-Image Clean Gallery: stacked with 20px gap, ullas-3 offset 24px right, slight desk rotation */}
         <Reveal delay={0.25} className="w-full flex justify-center">
-          <div className="w-full max-w-[560px]">
-            <div className="relative rounded-2xl border border-border overflow-hidden bg-card shadow-xl">
-              {/* The image with bottom gradient to hide faces */}
-              <div className="relative h-[400px] overflow-hidden">
-                <Image
-                  src="/images/ullas.jpeg"
-                  alt="Divaakar speaking to a school audience at an Ullas Trust event"
-                  fill
-                  className="object-cover"
-                  style={{ objectPosition: "center 30%" }}
-                  sizes="(max-width: 768px) 90vw, 560px"
-                  loading="lazy"
-                />
-                {/* Bottom gradient fade to hide student faces */}
-                <div
-                  className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
-                  style={{
-                    background: "linear-gradient(to top, var(--background), transparent)"
-                  }}
-                />
-              </div>
+          <div className="w-full max-w-[540px] flex flex-col gap-[20px] select-none">
+            {/* Image 1: ullas-2.jpg */}
+            <div
+              className="rounded-[16px] border border-border overflow-hidden bg-surface shadow-md transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl will-change-transform"
+              style={{
+                transform: "rotate(-1.5deg)",
+              }}
+            >
+              <Image
+                src="/images/ullas-2.jpg"
+                alt="Divaakar speaking at the Ullas Summit"
+                width={1080}
+                height={484}
+                className="w-full h-auto block rounded-[16px]"
+                sizes="(max-width: 768px) 90vw, 540px"
+                loading="lazy"
+              />
+            </div>
 
-              {/* Speech bubble typing effect */}
-              <div className="absolute top-4 right-4 max-w-[200px]">
-                <div className="relative rounded-lg border border-border bg-background/90 backdrop-blur-sm px-3 py-2 font-mono text-xs text-foreground">
-                  {typedText}
-                  <span className="boot-cursor text-accent-electric">|</span>
-                  <div className="absolute -bottom-1.5 right-4 size-3 rotate-45 border-r border-b border-border bg-background" />
-                </div>
-              </div>
-
-              {/* Caption */}
-              <div className="absolute bottom-3 left-3 font-mono text-[10px] bg-black/50 text-white/80 rounded px-2 py-0.5 backdrop-blur-sm">
-                ULLAS SUMMIT · IN FRONT OF THE CLASS
-              </div>
+            {/* Image 2: ullas-3.jpg (offset 24px right on md+ screens) */}
+            <div
+              className="rounded-[16px] border border-border overflow-hidden bg-surface shadow-md sm:translate-x-[24px] transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl will-change-transform"
+              style={{
+                transform: "rotate(1.5deg)",
+              }}
+            >
+              <Image
+                src="/images/ullas-3.jpg"
+                alt="Divaakar engaging with students during a mentoring summit"
+                width={1062}
+                height={466}
+                className="w-full h-auto block rounded-[16px]"
+                sizes="(max-width: 768px) 90vw, 540px"
+                loading="lazy"
+              />
             </div>
           </div>
         </Reveal>

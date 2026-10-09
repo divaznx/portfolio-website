@@ -14,40 +14,20 @@ const MASCOT_JOKES = [
 
 const TOOLBOX_DATA = [
   {
-    category: "AI & Agentic Systems",
-    items: [
-      "FastAPI",
-      "LangGraph",
-      "LangChain",
-      "Model Context Protocol (MCP)",
-      "Qdrant (Vector DB)",
-      "RAG Architecture",
-      "Structured Outputs",
-      "Qwen & Local LLMs",
-      "Ollama",
-    ],
+    category: "Languages & Frameworks",
+    items: ["Python", "Go", "PHP", "SQL", "FastAPI", "Flask", "Django"],
   },
   {
-    category: "Backend & Infrastructure",
-    items: [
-      "Python 3.12+",
-      "REST API Architecture",
-      "Docker",
-      "Linux / Shell",
-      "AWS EC2",
-      "Supabase",
-      "PostgreSQL",
-    ],
+    category: "AI, Agents & Vector Search",
+    items: ["LangChain", "LangGraph", "MCP", "Qdrant", "Chroma"],
   },
   {
-    category: "Machine Learning & Foundations",
-    items: [
-      "Scikit-Learn",
-      "NLP & Embeddings",
-      "OCR Processing",
-      "Data Modeling",
-      "Prompt Engineering",
-    ],
+    category: "Databases & Cloud Infrastructure",
+    items: ["Supabase", "PostgreSQL", "MongoDB", "Docker", "AWS EC2/S3", "Linux"],
+  },
+  {
+    category: "Computer Vision & ML",
+    items: ["OpenCV", "YOLO", "ByteTrack", "Scikit-Learn"],
   },
 ]
 

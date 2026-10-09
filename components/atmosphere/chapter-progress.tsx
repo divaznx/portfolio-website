@@ -14,10 +14,11 @@ const SECTORS: SectorInfo[] = [
   { id: "sector-02", num: "02", title: "The Roots" },
   { id: "sector-03", num: "03", title: "Learning to Build" },
   { id: "sector-04", num: "04", title: "Out of the Comfort Zone" },
-  { id: "sector-05", num: "05", title: "Shipping for Real" },
-  { id: "sector-06", num: "06", title: "The Turning Point" },
-  { id: "sector-07", num: "07", title: "Now" },
-  { id: "sector-08", num: "08", title: "Epilogue" },
+  { id: "sector-05", num: "05", title: "Freelance" },
+  { id: "sector-06", num: "06", title: "Personal Projects" },
+  { id: "sector-07", num: "07", title: "The Turning Point" },
+  { id: "sector-08", num: "08", title: "Now" },
+  { id: "sector-09", num: "09", title: "Epilogue" },
 ]
 
 export function ChapterProgress() {
@@ -76,19 +77,23 @@ export function ChapterProgress() {
         />
       </div>
 
-      {/* Floating sector tag */}
+      {/* Floating sector tag & lap indicator */}
       <div
-        className={`fixed bottom-6 left-6 z-40 hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-border bg-background/80 backdrop-blur-md shadow-sm transition-all duration-300 pointer-events-auto ${
+        className={`fixed bottom-6 left-6 z-40 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-border bg-background/85 backdrop-blur-md shadow-sm transition-all duration-300 pointer-events-auto ${
           visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
         }`}
         aria-live="polite"
         aria-atomic="true"
       >
         <span className="flex size-2 rounded-full bg-accent-electric animate-pulse" />
+        <span className="font-mono text-[10px] tracking-wider uppercase text-accent-electric font-semibold">
+          LAP {activeSector.num} / 09
+        </span>
+        <span className="text-border text-xs">/</span>
         <span className="font-mono text-[10px] tracking-wider uppercase text-muted-foreground">
           SECTOR {activeSector.num}
         </span>
-        <span className="text-border text-xs">/</span>
+        <span className="text-border text-xs">·</span>
         <span className="font-sans text-xs font-medium text-foreground tracking-tight">
           {activeSector.title}
         </span>

@@ -166,7 +166,7 @@ function Nav() {
             type="button"
             className="hidden sm:inline-flex font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors px-2 py-1"
             onClick={() => {
-              const el = document.getElementById("sector-08") || document.getElementById("contact")
+              const el = document.getElementById("sector-09") || document.getElementById("contact")
               if (el) el.scrollIntoView({ behavior: "smooth" })
             }}
             aria-label="Skip to contact section"
@@ -177,7 +177,8 @@ function Nav() {
           {/* Theme toggle */}
           <button
             type="button"
-            onClick={toggle}
+            onClick={(e) => toggle(e)}
+            suppressHydrationWarning
             aria-label={isNight ? "Switch to daylight" : "Switch to night"}
             className="relative flex size-9 items-center justify-center rounded-full border border-border bg-background/70 text-foreground backdrop-blur-sm transition-colors duration-300 hover:bg-foreground hover:text-background"
           >

@@ -6,35 +6,14 @@ import { Reveal } from "@/components/motion/reveal"
 
 /**
  * The film still image path. Change this one constant to swap the image.
- * See TODO.md for copyright/takedown note.
+ * See TODO.md for copyright/takedown risk and swap instructions.
  */
-const FILM_STILL_IMAGE = "/images/social-network.jpeg"
+export const FILM_STILL_IMAGE = "/images/social-network.jpeg"
 
 export function ChapterSpark() {
-  const [locCount, setLocCount] = React.useState(42)
-  const sectionRef = React.useRef<HTMLElement>(null)
-
-  React.useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return
-      const rect = sectionRef.current.getBoundingClientRect()
-      const windowH = window.innerHeight
-
-      if (rect.top < windowH && rect.bottom > 0) {
-        const progress = Math.min(1, Math.max(0, (windowH - rect.top) / (windowH + rect.height)))
-        setLocCount(42 + Math.floor(progress * 14778))
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
   return (
     <section
       id="sector-01"
-      ref={sectionRef}
       className="relative min-h-[95vh] flex flex-col justify-between py-24 px-[var(--layout-gutter)] max-w-[var(--layout-max)] mx-auto border-t border-border"
     >
       {/* Sector Tag */}
@@ -48,8 +27,9 @@ export function ChapterSpark() {
         </div>
       </div>
 
-      {/* Main Narrative & Cinema Stage */}
-      <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center my-auto">
+      {/* Main Narrative & Clean Image Box */}
+      <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-12 lg:gap-16 items-center my-auto">
+        {/* Text column with popcorn bubble */}
         <div className="space-y-6">
           <Reveal>
             <h2 className="chapter-title text-[clamp(2.8rem,1.5rem+5vw,5.5rem)] text-foreground">
@@ -64,62 +44,42 @@ export function ChapterSpark() {
                 about building something from nothing hit differently, and I haven&apos;t stopped
                 writing code since.
               </p>
-              {/* [TODO-REAL-DETAIL: one scene or feeling from Divaakar about watching The Social Network] */}
+              {/* [TODO-REAL-DETAIL: one scene or feeling from me; render nothing visible if missing] */}
             </div>
           </Reveal>
 
+          {/* Mascot with popcorn bubble placed next to text (not on image) */}
           <Reveal delay={0.15}>
-            <div className="pt-4 font-mono text-xs text-accent-electric flex items-center gap-2">
-              <span className="inline-block size-2 rounded-full bg-accent-electric animate-pulse" />
+            <div className="flex items-center gap-3 font-mono text-xs text-muted-foreground pt-1">
+              <span className="text-2xl select-none" aria-hidden="true">🍿</span>
+              <div className="rounded-xl border border-border bg-surface px-3.5 py-2 text-foreground/85 shadow-xs">
+                <span className="italic">*munches popcorn*</span>{" "}
+                <span className="text-accent-electric font-bold">&quot;npm run dev&quot;</span>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.2}>
+            <div className="pt-2 font-mono text-xs text-accent-electric flex items-center gap-2">
+              <span className="inline-block size-1.5 rounded-full bg-accent-electric" />
               <span>Before I wrote real code, I already had a different production system.</span>
             </div>
           </Reveal>
         </div>
 
-        {/* Cinema-Style Visual: Film Still in letterbox frame */}
+        {/* Clean Image Box: ONLY the image, max 509px, never upscaled */}
         <Reveal delay={0.25} className="w-full flex justify-center">
           <div className="w-full max-w-[509px]">
-            {/* Cinema frame container */}
-            <div className="relative rounded-2xl border border-border bg-black overflow-hidden shadow-xl">
-              {/* Top letterbox bar */}
-              <div className="bg-black px-4 py-2 flex items-center justify-between font-mono text-[10px] text-white/40 tracking-widest">
-                <span>FILM FRAME · 001</span>
-                <span className="text-accent-electric/60">24FPS</span>
-              </div>
-
-              {/* The film still — never displayed wider than 509px */}
-              <div className="relative film-grain">
-                <Image
-                  src={FILM_STILL_IMAGE}
-                  alt="Still from The Social Network (2010), the movie that inspired Divaakar to start coding"
-                  width={509}
-                  height={351}
-                  className="w-full h-auto block"
-                  sizes="(max-width: 509px) 100vw, 509px"
-                  loading="lazy"
-                />
-              </div>
-
-              {/* Bottom letterbox bar */}
-              <div className="bg-black px-4 py-2 flex items-center justify-between font-mono text-[10px] text-white/40">
-                <span className="tracking-wider">LINES OF CODE SINCE THE MOVIE</span>
-                <span className="text-white/80 font-bold tracking-tight">
-                  {locCount.toLocaleString("en-US", { minimumIntegerDigits: 5, useGrouping: true }).replace(/,/g, ",")}
-                </span>
-              </div>
-            </div>
-
-            {/* Credit line */}
-            <p className="mt-2 text-center font-mono text-[9px] text-muted-foreground/60">
-              Still from The Social Network (2010). © its owners.
-            </p>
-
-            {/* Mascot popcorn bubble */}
-            <div className="mt-3 flex items-center justify-center gap-2 font-mono text-[11px] text-muted-foreground">
-              <span>🍿</span>
-              <span className="italic text-foreground/60">
-                *munches popcorn* &quot;npm run dev&quot;
-              </span>
+            <div className="rounded-[16px] border border-border overflow-hidden bg-surface shadow-md">
+              <Image
+                src={FILM_STILL_IMAGE}
+                alt="Still from The Social Network (2010), the movie that inspired Divaakar to start coding"
+                width={509}
+                height={351}
+                className="w-full h-auto block rounded-[16px]"
+                sizes="(max-width: 509px) 100vw, 509px"
+                loading="lazy"
+              />
             </div>
           </div>
         </Reveal>

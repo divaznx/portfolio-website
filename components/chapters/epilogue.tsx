@@ -55,13 +55,13 @@ const SOCIAL_LINKS = [
 export function Epilogue() {
   return (
     <footer
-      id="sector-08"
+      id="sector-09"
       className="relative min-h-[90vh] flex flex-col justify-between py-24 px-[var(--layout-gutter)] max-w-[var(--layout-max)] mx-auto border-t border-border"
     >
       {/* Sector Header */}
       <div className="flex items-center justify-between pb-8">
         <div className="flex items-center gap-3">
-          <span className="sector-tag">SECTOR 08</span>
+          <span className="sector-tag">SECTOR 09</span>
           <span className="text-border">/</span>
           <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
             EPILOGUE
@@ -116,7 +116,7 @@ export function Epilogue() {
               </a>
             </div>
 
-            {/* Social Grid */}
+            {/* Social Grid with slide-underline effect */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
               {SOCIAL_LINKS.map(({ name, href, icon: Icon }) => (
                 <a
@@ -124,10 +124,13 @@ export function Epilogue() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 font-mono text-xs text-foreground hover:border-accent-electric hover:text-accent-electric transition-colors group"
+                  className="relative inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 font-mono text-xs text-foreground hover:border-accent-electric hover:text-accent-electric transition-colors group overflow-hidden"
                 >
                   <Icon className="size-3.5 text-muted-foreground group-hover:text-accent-electric transition-colors" />
-                  <span>{name}</span>
+                  <span className="relative">
+                    {name}
+                    <span className="absolute left-0 bottom-[-2px] w-0 h-[1.5px] bg-accent-electric transition-all duration-300 group-hover:w-full" />
+                  </span>
                   <ArrowUpRight className="size-3 text-muted-foreground group-hover:text-accent-electric transition-colors" />
                 </a>
               ))}
@@ -136,14 +139,17 @@ export function Epilogue() {
         </Reveal>
       </div>
 
-      {/* Footer Motto, Copyright & Konami hint */}
-      <div className="border-t border-border pt-8 mt-16 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-muted-foreground">
-        <div>
-          <span>© 2026 DIVAAKAR NARESH · SHIP IT. THEN SHIP IT BETTER.</span>
+      {/* Footer Motto, Film Credit & Konami hint */}
+      <div className="border-t border-border pt-8 mt-16 flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-xs text-muted-foreground">
+        <div className="space-y-1 text-center md:text-left">
+          <div>© 2026 DIVAAKAR NARESH · SHIP IT. THEN SHIP IT BETTER.</div>
+          <div className="text-[10px] text-muted-foreground/60">
+            Film still: The Social Network (2010), © its owners.
+          </div>
         </div>
 
         {/* Konami code hint */}
-        <div className="text-center sm:text-right font-mono text-[11px] text-muted-foreground/80 tracking-wider">
+        <div className="text-center md:text-right font-mono text-[11px] text-muted-foreground/80 tracking-wider">
           <span className="text-accent-electric font-semibold mr-1.5">SECRET:</span>
           <span>↑ ↑ ↓ ↓ ← → ← → B A</span>
         </div>
