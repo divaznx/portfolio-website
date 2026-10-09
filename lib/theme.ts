@@ -55,17 +55,21 @@ export const anim = {
 export const themeColors = {
   day: {
     background: "#FAF8F5",
-    foreground: "#1A1A1E",
-    hairline: "#E5E3DE",
-    mutedForeground: "#6B6B70",
-    accent: "#C2410C",
+    surface: "#F1EDE6",
+    foreground: "#1A1A1A",
+    hairline: "#DAD4C8",
+    mutedForeground: "#66625A",
+    accent: "#4F7000",
+    onAccent: "#FAF8F5",
   },
   night: {
-    background: "#1A1A1E",
+    background: "#1E1E1E",
+    surface: "#282826",
     foreground: "#F0EDE8",
-    hairline: "#2A2A2F",
-    mutedForeground: "#8B8B92",
-    accent: "#FB923C",
+    hairline: "#3C3B38",
+    mutedForeground: "#A29E96",
+    accent: "#C6FF3D",
+    onAccent: "#14140F",
   },
 } as const
 
